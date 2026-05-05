@@ -38,7 +38,7 @@ pop_df["Population"] = pop_df["series_id"].map({
     "LNS11300000": "US Citizen Population",
     "LNS12300000": "Total US Population"
 })
-lbrfig = px.line(pop_df, x = "date", y = "value", colors = "Population" title = "Labor Force Statistics", labels= {"value": "Percentage of Population Employed %", "date": "Date"})
+lbrfig = px.line(pop_df, x = "date", y = "value", colors = "Population", title = "Labor Force Statistics", labels= {"value": "Percentage of Population Employed %", "date": "Date"})
 lbrfig.update_yaxes(ticksuffix="%")
 #employment pop ratio
 #emppopfig = px.line(df[df["series_id"]=="LNS12300000"], x = "date", y = "value", title = "Employment Population Ratio", labels = {"value":"Percentage of Total Population Employed %", "date":"Date"})
