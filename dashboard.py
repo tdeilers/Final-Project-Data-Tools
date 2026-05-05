@@ -30,17 +30,27 @@ unempfig.update_yaxes(range=[0,100],ticksuffix="%")
 
 #what does this stuff mean
 # labor force participation
-lbrfig = px.line(df[df["series_id"]=="LNS11300000"], x = "date", y = "value", title = "Labor Force Statistics", labels= {"value": "Unemployment %", "date": "Date"})
+lbrfig = px.line(df[df["series_id"]=="LNS11300000"], x = "date", y = "value", title = "Labor Force Statistics", labels= {"value": "Percentage of US Population Employed %", "date": "Date"})
 lbrfig.update_yaxes(ticksuffix="%")
 #employment pop ratio
-emppopfig = px.line(df[df["series_id"]=="LNS12300000"], x = "date", y = "value", title = "Employment Population Ratio", labels = {"value":"Unemployment %", "date":"Date"})
+emppopfig = px.line(df[df["series_id"]=="LNS12300000"], x = "date", y = "value", title = "Employment Population Ratio", labels = {"value":"Percentage of Total Population Employed %", "date":"Date"})
 emppopfig.update_yaxes(ticksuffix="%")
-#manufacturing
-manfig = px.line(df[df["series_id"]=="CES3000000001"], x = "date", y = "value")
+
+
+#manufacturing leisure comparison graph
+sector_df = df[df["series_id"].isin([
+    "CES3000000001",
+    "CES7000000001"
+])].copy() 
+sector_df["sector"] = sector_df["series_id"].map({
+    "CES3000000001": "Manufacturing",
+    "CES7000000001": "Leisure and Hospitality"
+})
+manfig = px.line(sector_df, x = "date", y = "value", color = 'sector', title = "Manufacturing vs Leisure Workers", labels = {"value":"Total number of Workers", "date":"Date"})
 #leisure and hospitality
-leisfig = px.line(df[df["series_id"]=="CES7000000001"], x = "date", y = "value")
-#average hourly earnings
-hourfig = px.line(df[df["series_id"]=="CES0500000003"], x = "date", y = "value")
+#leisfig = px.line(df[df["series_id"]=="CES7000000001"], x = "date", y = "value", title = "")
+#average hourly earnings    
+#hourfig = px.line(df[df["series_id"]=="CES0500000003"], x = "date", y = "value")
 
 
 #chartlist = ["Nonfarm Employment", "Employment Pop Ratio", "Unemploymetn Rate", "Manufacturing Ratio","Leisure and Hospitality", "Average Hourly Earnings"]
@@ -52,8 +62,11 @@ print(unempser["value"].iloc[-1])
 
 #with tab1:
 #what kind of markers at the top?
-st.metric(label = "Unemployment Rate", value = unempser["value"].iloc[-1])
-st.metric(label = "Total Non Farm Workers", value = nonfarmseries["value"].iloc[-1])
+st.metric(label = "Unemployment Rate", value = f"{unempser["value"].iloc[-1]}%")
+#this is the most recent number from how many employees or whatever, laborers, all labor is forced labor? just kidding work is fun 
+numberuh = nonfarmseries["value"].iloc[-1]
+            
+st.metric(label = "Total Non Farm Workers", value = f"{numberuh:,.0f}")
 st.plotly_chart(nonfarmfig)  # Nonfarm employment
 #with tab2:
 st.plotly_chart(unempfig) # Unemployment rate
