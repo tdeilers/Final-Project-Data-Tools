@@ -30,11 +30,19 @@ unempfig.update_yaxes(range=[0,100],ticksuffix="%")
 
 #what does this stuff mean
 # labor force participation
-lbrfig = px.line(df[df["series_id"]=="LNS11300000"], x = "date", y = "value", title = "Labor Force Statistics", labels= {"value": "Percentage of US Population Employed %", "date": "Date"})
+pop_df = df[df["series_id"].isin([
+    "LNS11300000",
+    "LNS12300000"
+])].copy() 
+pop_df["Population"] = pop_df["series_id"].map({
+    "LNS11300000": "US Citizen Population",
+    "LNS12300000": "Total US Population"
+})
+lbrfig = px.line(pop_df, x = "date", y = "value", colors = "Population" title = "Labor Force Statistics", labels= {"value": "Percentage of Population Employed %", "date": "Date"})
 lbrfig.update_yaxes(ticksuffix="%")
 #employment pop ratio
-emppopfig = px.line(df[df["series_id"]=="LNS12300000"], x = "date", y = "value", title = "Employment Population Ratio", labels = {"value":"Percentage of Total Population Employed %", "date":"Date"})
-emppopfig.update_yaxes(ticksuffix="%")
+#emppopfig = px.line(df[df["series_id"]=="LNS12300000"], x = "date", y = "value", title = "Employment Population Ratio", labels = {"value":"Percentage of Total Population Employed %", "date":"Date"})
+#emppopfig.update_yaxes(ticksuffix="%")
 
 
 #manufacturing leisure comparison graph
@@ -46,7 +54,7 @@ sector_df["sector"] = sector_df["series_id"].map({
     "CES3000000001": "Manufacturing",
     "CES7000000001": "Leisure and Hospitality"
 })
-manfig = px.line(sector_df, x = "date", y = "value", color = 'sector', title = "Manufacturing vs Leisure Workers", labels = {"value":"Total number of Workers", "date":"Date"})
+manfig = px.line(sector_df, x = "date", y = "value", color = 'sector', title = "Manufacturing vs Leisure Workers", labels = {"value":"Total Number of Workers", "date":"Date"})
 #leisure and hospitality
 #leisfig = px.line(df[df["series_id"]=="CES7000000001"], x = "date", y = "value", title = "")
 #average hourly earnings    
