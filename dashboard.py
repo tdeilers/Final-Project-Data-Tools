@@ -61,9 +61,9 @@ manfig = px.line(sector_df, x = "date", y = "value", color = 'sector', title = "
 #hourfig = px.line(df[df["series_id"]=="CES0500000003"], x = "date", y = "value")
 
 
-#chartlist = ["Nonfarm Employment", "Employment Pop Ratio", "Unemploymetn Rate", "Manufacturing Ratio","Leisure and Hospitality", "Average Hourly Earnings"]
+chartlist = ["Non-Farm Employment", "Unemployment Rate", "Population Ratio","Workers by Sector"]
 
-#tab1,tab2,tab3,tab4,tab5,tab6 = st.tabs(chartlist)
+tab1,tab2,tab3,tab4 = st.tabs(chartlist)
 unempser = df[df["series_id"]=="LNS14000000"].sort_values("date")
 nonfarmseries = df[df["series_id"]== "CES0000000001"].sort_values("date")
 print(unempser["value"].iloc[-1])
@@ -75,15 +75,14 @@ st.metric(label = "Unemployment Rate", value = f"{unempser["value"].iloc[-1]}%")
 numberuh = nonfarmseries["value"].iloc[-1]
             
 st.metric(label = "Total Non Farm Workers", value = f"{numberuh:,.0f}")
-st.plotly_chart(nonfarmfig)  
-#with tab2:
-st.plotly_chart(unempfig) 
-#with tab3:
-st.plotly_chart(lbrfig) 
-#with tab4:
-#st.plotly_chart(emppopfig) 
-#with tab5:
-st.plotly_chart(manfig) # Leisure and the manuacturing
+with tab1:
+    st.plotly_chart(nonfarmfig)  
+with tab2:
+    st.plotly_chart(unempfig) 
+with tab3:
+    st.plotly_chart(lbrfig) 
+with tab4:
+    st.plotly_chart(manfig) # Leisure and the manuacturing
 #with tab6:
 #st.plotly_chart(hourfig) # Avg hourly earnings
 
