@@ -3,36 +3,36 @@ import pandas as pd
 from datetime import datetime
 from pathlib import Path
 
-SERIES_MAP = {
-    "CES0000000001": "Nonfarm Employment",
-    "LNS14000000": "Unemployment Rate",
-    "LNS11300000": "Labor Force Participation Rate",
-    "LNS12300000": "Employment-Population Ratio",
-    "CES3000000001": "Manufacturing Employment",
-    "CES7000000001": "Leisure and Hospitality Employment",
-    "CES0500000003": "Average Hourly Earnings",
-}
+payload2 = 	{"seriesid":[    "CES0000000001",   # Nonfarm employment
+    "LNS14000000",     # Unemployment rate
+    "LNS11300000",     # Labor force  participation 
+    "LNS12300000",     # Employment-pop   ratio
+    "CES3000000001",   # Man ufacturing
+    "CES7000000001",    # Leisure & hospitality
+    "CES0500000003",   # Avg horly earnings
+]}
 
-DATA_PATH = Path("data/master_data.csv")
-BLS_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+DATA_PATH = Path("masterdata.csv")
+
 
 
 def fetch_bls_data():
+    #gets last year of data
     current_year = datetime.now().year
 
     payload = {
-        "seriesid": list(SERIES_MAP.keys()),
+        "seriesid": payload2["seriesid"],
         "startyear": str(current_year - 1),
         "endyear": str(current_year),
     }
 
-    response = requests.post(BLS_URL, json=payload)
+    response = requests.post("https://api.bls.gov/publicAPI/v2/timeseries/data/", json=payload)
     response.raise_for_status()
 
     return response.json()
 
-
-def bls_json_to_dataframe(data):
+#so this
+def jsontodataframe(data):
     rows = []
 
     for series in data["Results"]["series"]:
@@ -41,32 +41,34 @@ def bls_json_to_dataframe(data):
         for item in series["data"]:
             rows.append({
                 "series_id": series_id,
-                "series_name": SERIES_MAP.get(series_id, series_id),
                 "year": item["year"],
                 "period": item["period"],
-                "period_name": item["periodName"],
+                
                 "value": item["value"],
-                "latest": item.get("latest", "false"),
             })
 
     df = pd.DataFrame(rows)
-
+    #convert shit to month
     df["month"] = df["period"].str.replace("M", "", regex=False)
     df["date"] = pd.to_datetime(df["year"] + "-" + df["month"] + "-01")
     df["value"] = pd.to_numeric(df["value"], errors="coerce")
 
-    df = df.drop(columns=["month"])
+    df = df.drop(columns=["month","period","year"])
 
     return df
 
 
-def update_master_data(new_df):
+def updatemasterdata(new_df):
+    #get data old one 
     if DATA_PATH.exists():
         old_df = pd.read_csv(DATA_PATH)
+
+
         old_df["date"] = pd.to_datetime(old_df["date"])
 
         combined = pd.concat([old_df, new_df], ignore_index=True)
     else:
+        #easier then two things., files, that is
         combined = new_df
 
     combined = combined.drop_duplicates(
@@ -84,12 +86,10 @@ def update_master_data(new_df):
 
 def main():
     data = fetch_bls_data()
-    new_df = bls_json_to_dataframe(data)
-    updated_df = update_master_data(new_df)
+    new_df = jsontodataframe(data)
+    updated_df = updatemasterdata(new_df)
 
-    print("BLS data updated successfully.")
-    print(f"Rows saved: {len(updated_df)}")
-    print(f"Latest date: {updated_df['date'].max().date()}")
+ 
 
 
 if __name__ == "__main__":
