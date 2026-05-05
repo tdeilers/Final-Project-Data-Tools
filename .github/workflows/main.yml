@@ -1,0 +1,25 @@
+#yaml time.. what is a yamel uh.. 
+#the weight bearing yamel something something nietszche
+name: update
+
+on:
+  schedule:
+    - cron: "0 12 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          pip install pandas requests streamlit plotly
+          python update_bls_data.py
+          git config --global user.name "bot"
+          git config --global user.email "bot@bot.com"
+          git add .
+          git commit -m "update" || echo nothing
+          git push
