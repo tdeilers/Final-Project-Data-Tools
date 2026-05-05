@@ -72,10 +72,11 @@ print(unempser["value"].iloc[-1])
 #what kind of markers at the top?
 st.metric(label = "Unemployment Rate", value = f"{unempser["value"].iloc[-1]}%")
 #this is the most recent number from how many employees or whatever, laborers, all labor is forced labor? just kidding work is fun 
-tab1,tab2,tab3,tab4 = st.tabs(chartlist)
+
 numberuh = nonfarmseries["value"].iloc[-1]
             
 st.metric(label = "Total Non Farm Workers", value = f"{numberuh:,.0f}")
+tab1,tab2,tab3,tab4 = st.tabs(chartlist)
 with tab1:
     st.plotly_chart(nonfarmfig)  
 with tab2:
