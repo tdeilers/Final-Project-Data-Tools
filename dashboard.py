@@ -14,7 +14,7 @@ df = pd.read_csv("masterdata.csv")
 
 print(df)
 
-st.title("My First Chart")
+st.title("Labor Stastistics")
 #how do i add labels and stuff?
 #nonfarm empoyment
 nonfarmfig = px.line(df[df["series_id"]=="CES0000000001"], x = "date", y = "value", title = "Nonfarm Employment")
