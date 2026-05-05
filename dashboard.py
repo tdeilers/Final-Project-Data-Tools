@@ -67,17 +67,17 @@ st.metric(label = "Unemployment Rate", value = f"{unempser["value"].iloc[-1]}%")
 numberuh = nonfarmseries["value"].iloc[-1]
             
 st.metric(label = "Total Non Farm Workers", value = f"{numberuh:,.0f}")
-st.plotly_chart(nonfarmfig)  # Nonfarm employment
+st.plotly_chart(nonfarmfig)  
 #with tab2:
-st.plotly_chart(unempfig) # Unemployment rate
+st.plotly_chart(unempfig) 
 #with tab3:
-st.plotly_chart(lbrfig) # Labor force participation
+st.plotly_chart(lbrfig) 
 #with tab4:
-st.plotly_chart(emppopfig) # Employment-pop ratio
+st.plotly_chart(emppopfig) 
 #with tab5:
-st.plotly_chart(leisfig) # Leisure & Hospitality
+st.plotly_chart(manfig) # Leisure and the manuacturing
 #with tab6:
-st.plotly_chart(hourfig) # Avg hourly earnings
+#st.plotly_chart(hourfig) # Avg hourly earnings
 
 
 
