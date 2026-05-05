@@ -17,9 +17,9 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           pip install pandas requests streamlit plotly
-          python update_bls_data.py
-          git config --global user.name "bot"
-          git config --global user.email "bot@bot.com"
+          python appenddata.py
+          git config --global user.name "Zarathustra"
+          git config --global user.email "dionysus@apollo.com"
           git add .
           git commit -m "update" || echo nothing
           git push
